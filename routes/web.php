@@ -17,19 +17,59 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/hello', function() {
-    return 'Hello World';
+Route::get('/test', 'App\Http\Controllers\TestController@index');
+Route::get('/about', 'App\Http\Controllers\AboutController@index');
+
+Route::get('/admin', 'App\Http\Controllers\Admin\DashboardController'); 
+// Route::resources('/admin/posts', 'App\Http\Controllers\Admin\PostController'); 
+
+Route::resources([
+    '/admin/users' => App\Http\Controllers\Admin\UserController::class,
+    '/admin/posts' => App\Http\Controllers\Admin\PostController::class,
+]);
+
+Route::resource('blog', App\Http\Controllers\BlogController::class)->only([
+    'index', 'show'
+]);
+
+Route::resource('blog', App\Http\Controllers\BlogController::class)->except([
+    'create', 'store', 'update', 'destroy'
+]);
+
+Route::resource('admin/posts', App\Http\Controllers\Admin\PostController::class)->names([
+    'create' => 'posts.build'
+]);
+
+Route::resource('admin/users', App\Http\Controllers\Admin\UserController::class)->parameters([
+    'users' => 'admin_user'
+]);
+
+Route::get('/contact', function (Request $request) {
+    return view('contact.index');
 });
 
+Route::get('/contact/url', 'App\Http\Controllers\ContactController@url');
 
-Route::get('/hell', function() {
-    return view('greeting');
-});
+Route::put('/contact/{id}', [App\Http\Controllers\ContactController::class, 'update']);
 
-Route::get('/ole', function() {
-    return view('hello.greeting', ['name' => 'Janus']);
-});
 
-Route::get('/hi', 'App\Http\Controllers\HelloController@index');
+Route::resource('blog', App\Http\Controllers\BlogController::class)->only([
+    'index', 'show'
+]);
  
+ Route::resource('blog', App\Http\Controllers\PlogController::class)->except([
+    'create', 'store', 'update', 'destroy'
+]);
  
+Route::match(['get', 'post'], '/foobar', function () {
+    return 'Hello FooBar!';
+});
+
+Route::any('foomar', function () {
+    return 'Hello Foomar!';
+});
+
+// Еще какие-то маршруты....
+Route::fallback(function() {
+    return "Oops… How you've trapped here?";
+});
