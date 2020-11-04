@@ -16,7 +16,20 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = DB::select('select * from categories');
+        $categories = DB::table('categories')->get();
+        
+        // foreach ($categories as $category) {
+        //     echo $category->name;
+        // }
+
+        // $result = DB::table('categories')->pluck('id');
+        // $result = DB::table('categories')->pluck('id', 'name');
+        // $result = DB::table('categories')->select('name', 'description as category_description')->get();
+        // $result = DB::table('categories')->distinct()->get();
+        
+        // $query = DB::table('categories')->select('name');
+        // $result = $query->addSelect('votes')->get();
+        // dump($result);
         return view('admin.categories.index', compact('categories'));
     }
 
@@ -38,13 +51,8 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        DB::insert('insert into categories (name, description, created_at) value(?, ?, ?)', 
-            [
-                $request['name'], 
-                $request['description'],
-                Carbon::now('Europe/Kiev')
-            ]
-        );
+        DB::table('categories')->insert(
+            ['name' => $request['name'], 'description' => $request['description'], 'created_at' => Carbon::now('Europe/Kiev')]);
         return redirect(route('admin.categories.index'));
     }
 
@@ -56,8 +64,8 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-        $category = DB::select('select * from categories where id=?', [$id])[0];
-        // dd($category);
+        $category = DB::table('categories')->find(3);
+        dump($category);
     }
 
     /**
@@ -68,8 +76,7 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        // $category = DB::select('select * from categories where id=?', [$id]);
-        $category = DB::select('select * from categories where id=?', [$id])[0];
+        $category = DB::table('categories')->find($id);
         // dd($category);
         return view('admin.categories.edit', compact('category'));
     }
@@ -83,13 +90,9 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        DB::update('update categories set name=?, description=?, updated_at=?
-         where id = ?', [
-            $request['name'], 
-            $request['description'], 
-            Carbon::now('Europe/Kiev'),
-            $id
-        ]);
+        DB::table('categories')
+            ->where('id', $id)
+            ->update(['name' => $request['name'], 'description' => $request['description'],  'updated_at' => Carbon::now('Europe/Kiev')]);
         return redirect(route('admin.categories.index'));
     }
 
@@ -101,7 +104,7 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        DB::delete('delete from categories where id=?', [$id]);
+        DB::table('categories')->where('id',$id)->delete();
         return redirect(route('admin.categories.index'));
     }
 }
