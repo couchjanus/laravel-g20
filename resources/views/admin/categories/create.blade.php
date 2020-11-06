@@ -1,13 +1,32 @@
-<h1>Add New Category</h1>
-<form method="POST" action="/admin/categories">
-  <input type='hidden' name="_token" value="{{ csrf_token() }}">
-  <div class="form-group">
-    <label for="name">Name:</label>
-    <input type="text" class="form-control" id="name" name="name" placeholder="Enter name">
-  </div>
-  <div class="form-group">
-    <label for="description">Description:</label>
-    <input id="description" type="text" class="form-control" name="description"> 
-  </div>
-  <button type="submit" class="btn btn-primary">Save</button>
-</form>
+@extends('layouts.admin')
+@section('content')
+
+<div class="card">
+    <div class="card-header">
+        {{ trans('global.create') }} {{ trans('cruds.expenseCategory.title_singular') }}
+    </div>
+
+    <div class="card-body">
+        <form action="{{ route("admin.expense-categories.store") }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
+                <label for="name">{{ trans('cruds.expenseCategory.fields.name') }}*</label>
+                <input type="text" id="name" name="name" class="form-control" value="{{ old('name', isset($expenseCategory) ? $expenseCategory->name : '') }}" required>
+                @if($errors->has('name'))
+                    <em class="invalid-feedback">
+                        {{ $errors->first('name') }}
+                    </em>
+                @endif
+                <p class="helper-block">
+                    {{ trans('cruds.expenseCategory.fields.name_helper') }}
+                </p>
+            </div>
+            <div>
+                <input class="btn btn-danger" type="submit" value="{{ trans('global.save') }}">
+            </div>
+        </form>
+
+
+    </div>
+</div>
+@endsection

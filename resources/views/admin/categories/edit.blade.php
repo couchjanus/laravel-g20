@@ -1,15 +1,33 @@
-<h1>Edit Category</h1>
-<form method="POST" action="/admin/categories/{{ $category->id }}">
-    <input type='hidden' name="_token" value="{{ csrf_token() }}">
-    <input type='hidden' name="_method" value="PUT">
-  <div class="form-group">
-    <input name="id" type="hidden" value="{{ $category->id }}">
-    <label for="name">Name:</label>
-    <input type="text" class="form-control" id="name" name="name" value="{{ $category->name }}">
-  </div>
-  <div class="form-group">
-    <label for="description">Description:</label>
-    <input id="description" type="text" class="form-control" name="description" value="{{ $category->description }}"> 
-  </div>
-  <button type="submit" class="btn btn-primary">Update</button>
-</form>
+@extends('layouts.admin')
+@section('content')
+
+<div class="card">
+    <div class="card-header">
+        {{ trans('global.edit') }} {{ trans('cruds.expenseCategory.title_singular') }}
+    </div>
+
+    <div class="card-body">
+        <form action="{{ route("admin.expense-categories.update", [$expenseCategory->id]) }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
+            <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
+                <label for="name">{{ trans('cruds.expenseCategory.fields.name') }}*</label>
+                <input type="text" id="name" name="name" class="form-control" value="{{ old('name', isset($expenseCategory) ? $expenseCategory->name : '') }}" required>
+                @if($errors->has('name'))
+                    <em class="invalid-feedback">
+                        {{ $errors->first('name') }}
+                    </em>
+                @endif
+                <p class="helper-block">
+                    {{ trans('cruds.expenseCategory.fields.name_helper') }}
+                </p>
+            </div>
+            <div>
+                <input class="btn btn-danger" type="submit" value="{{ trans('global.save') }}">
+            </div>
+        </form>
+
+
+    </div>
+</div>
+@endsection
