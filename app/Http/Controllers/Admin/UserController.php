@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use DB;
+use Carbon\Carbon;
+use App\Models\User;
 
 class UserController extends Controller
 {
@@ -26,7 +29,10 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        $title = "Admin";
+        $subtitle = "Users";
+        $users = DB::table('users')->get();
+        return view('admin.users.index', compact('users', 'title', 'subtitle'));
     }
 
     /**
@@ -36,7 +42,11 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        $title = "Admin";
+        $subtitle = "Users";
+       
+        return view('admin.users.create', compact('title', 'subtitle'));
+
     }
 
     /**
@@ -69,7 +79,11 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        //
+        $user = DB::table('users')->find($id);
+        $title = "Admin";
+        $subtitle = "Users";
+        return view('admin.users.edit', compact('user', 'title', 'subtitle'));
+
     }
 
     /**

@@ -3,7 +3,7 @@
 
 <div class="card">
     <div class="card-header">
-        {{ trans('global.show') }} {{ trans('cruds.user.title') }}
+        show user
     </div>
 
     <div class="card-body">
@@ -12,7 +12,7 @@
                 <tbody>
                     <tr>
                         <th>
-                            {{ trans('cruds.user.fields.id') }}
+                            id
                         </th>
                         <td>
                             {{ $user->id }}
@@ -20,7 +20,7 @@
                     </tr>
                     <tr>
                         <th>
-                            {{ trans('cruds.user.fields.name') }}
+                            user name
                         </th>
                         <td>
                             {{ $user->name }}
@@ -28,7 +28,7 @@
                     </tr>
                     <tr>
                         <th>
-                            {{ trans('cruds.user.fields.email') }}
+                            user email
                         </th>
                         <td>
                             {{ $user->email }}
@@ -36,26 +36,17 @@
                     </tr>
                     <tr>
                         <th>
-                            {{ trans('cruds.user.fields.email_verified_at') }}
+                            user email verified at
                         </th>
                         <td>
                             {{ $user->email_verified_at }}
                         </td>
                     </tr>
-                    <tr>
-                        <th>
-                            Roles
-                        </th>
-                        <td>
-                            @foreach($user->roles as $id => $roles)
-                                <span class="label label-info label-many">{{ $roles->title }}</span>
-                            @endforeach
-                        </td>
-                    </tr>
+                    
                 </tbody>
             </table>
             <a style="margin-top:20px;" class="btn btn-default" href="{{ url()->previous() }}">
-                {{ trans('global.back_to_list') }}
+                back to list
             </a>
         </div>
 
