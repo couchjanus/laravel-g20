@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use DB;
 use Carbon\Carbon;
+use App\Models\Category;
 
 class CategoryController extends Controller
 {
@@ -18,7 +19,7 @@ class CategoryController extends Controller
     {
         $title = "Admin";
         $subtitle = "Categories";
-        $categories = DB::table('categories')->get();
+        $categories = Category::paginate();
         return view('admin.categories.index', compact('categories', 'title', 'subtitle'));
     }
 

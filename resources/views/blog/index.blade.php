@@ -1,12 +1,7 @@
-<h1>Blog Page</h1>
+<h1>Blog Posts</h1>
 
-<?php foreach ($posts as $post):?>
-
-    <h2><a href="{{ route('blog.show', $post->id) }}">{{ $post->title }}</a></h2>
-
-    <p>{{ $post->created_at }} {{ $post->username }} {{ $post->categoryname }}</p>
-     <div>
-        {{ $post->content }}
-    </div>
-<?php endforeach?>
-
+@foreach ($posts as $post)
+    <a href="{{ route('blog.show', $post->id) }}">
+        <h2>{{ $post->title }}</h2>
+    </a>
+@endforeach
