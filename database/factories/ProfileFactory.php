@@ -23,9 +23,12 @@ class ProfileFactory extends Factory
     {
         $users = \DB::table('users')->pluck('id');
         return [
-            'user_id' => $this->faker->randomElement($users),
+            'user_id' => $this->faker->unique()->randomElement($users),
             'first_name' => $this->faker->firstName(),
             'last_name' => $this->faker->lastName(),
+            'phone' => $this->faker->tollFreePhoneNumber(), 
+            'location' => $this->faker->address(),
+            'bio' => $this->faker->paragraph($nbSentences = 3, $variableNbSentences = true),
             'created_at' => now(),
             'updated_at' => now(),
         ];

@@ -25,14 +25,10 @@
                 <textarea class="form-control" name="content" id="content" required>
                 {{ $post->content }}</textarea>
                 <span class="help-block">{{ __('Content Field Required') }}</span>
-
-
-                <textarea class="form-control" style="height:50px" name="introduction"
-                        placeholder="Introduction">{{ $project->introduction }}</textarea>
             </div>
             <div class="form-group">
-                <label for="published">{{ __('Is Published?') }}</label>
-                <input class="form-control" type="checkbox" name="published" id="published" {{ ($post->published == 1)?'checked':'' }}>
+                <label for="status">{{ __('Is Published?') }}</label>
+                <input class="form-control" type="checkbox" name="status" id="status" {{ ($post->status == 1)?'checked':'' }}>
                 <span class="help-block">{{ __('Status Post') }}</span>
             </div>
             <div class="form-group">
@@ -44,6 +40,17 @@
                 </select>
                 <span class="help-block">{{ __('Category Field Required') }}</span>
             </div>
+             <div class="form-group">
+                <label for="tag" class= 'control-label'>Select tags</label>
+                <select name="tags[]" class="form-control select2" multiple='multiple' id='tag'>
+                    @foreach($tags as $key => $value)
+                        <option value="{{ $key }}"
+                            {{ ($post->tags->pluck('id')->contains($key)) ? 'selected':'' }}  />
+                            {{ $value }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
             <div class="form-group">
                 <button class="btn btn-danger" type="submit">
                     {{ __('Update') }}
@@ -52,4 +59,15 @@
         </form>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+@parent
+<script src="{{ asset('js/select2.min.js') }}"></script>
+
+<script>
+    $(document).ready(function () {
+        $('.select2').select2();
+    });
+</script>
 @endsection

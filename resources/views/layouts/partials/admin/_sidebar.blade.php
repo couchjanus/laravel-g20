@@ -48,6 +48,14 @@
                    Categories
                 </a>
             </li>
+            <li class="nav-item">
+                <a href="{{ route("admin.tags.index") }}" class="nav-link {{ request()->is('admin/tags') || request()->is('admin/tags/*') ? 'active' : '' }}">
+                    <i class="fa-fw fas fa-list nav-icon">
+
+                    </i>
+                   Tags
+                </a>
+            </li>
 
 
             <li class="nav-item">

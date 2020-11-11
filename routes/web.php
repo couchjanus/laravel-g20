@@ -10,7 +10,10 @@ Route::get('/about', 'App\Http\Controllers\AboutController@index');
 Route::group(['prefix' => 'blog', 'as' => 'blog.', 'namespace' => 'App\Http\Controllers'], function () {
     Route::get('', 'BlogController@index')->name('index');
     Route::get('show/{id}', 'BlogController@show')->name('show');
+    Route::get('user/{id}', 'BlogController@postsByUser')->name('user');
+    Route::get('category/{id}', 'BlogController@postsByCategory')->name('category');
     Route::get('like/{id}', 'BlogController@like')->name('like');
+    
 });
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'App\Http\Controllers\Admin'], function () {
@@ -23,6 +26,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'App\Http\Co
     Route::resource('users', 'UserController');
     Route::resource('categories', 'CategoryController');
     Route::resource('posts', 'PostController');
+    Route::resource('tags', 'TagController');
 });
 
 
@@ -30,6 +34,25 @@ Route::get('profiles', 'App\Http\Controllers\ProfileController@index')->name('pr
 Route::get('profiles/{id}', 'App\Http\Controllers\ProfileController@show')->name('profile.show');
 
 
+Route::get('posts-by-status', function () {
+    $user = \App\Models\User::find(7);
+    // dump($user);
+    // $posts = $user->posts;
+    // dump($posts);
+    $posts = $user->posts->where('status', 1)->all();
+    foreach ($posts as $post) {
+        dump($post);
+    }
+});
+
+Route::get('posts-by-user', function () {
+    $posts = App\Models\Post::where('status', 1)
+    ->with('user')
+    ->get();
+    dump($posts);
+});
+ 
+ 
 // Route::get('category/{id}', 'BlogController@getByCategory');
 //     Route::get('author/{id}', 'BlogController@getByAuthor');
 //     Route::get('show/{id}', 'BlogController@show');

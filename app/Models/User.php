@@ -40,4 +40,17 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Get the profile record associated with the user.
+     */
+    public function profile()
+    {
+        return $this->hasOne('App\Models\Profile');
+    }
+
+    public function posts()   {
+        return $this->hasMany('App\Models\Post');
+    }
+
 }

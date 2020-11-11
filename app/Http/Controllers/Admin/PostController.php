@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\{Post, Category};
+use App\Models\{Post, Category, Tag};
 
 class PostController extends Controller
 {
@@ -17,9 +17,6 @@ class PostController extends Controller
     {
         $title = "Admin";
         $subtitle = "Posts";
-        // $posts = Post::all();
-        // $posts = Post::paginate();
-        // $posts = Post::paginate(10);
         $posts = Post::paginate(10);
 
         // $posts = Post::where([
@@ -44,8 +41,11 @@ class PostController extends Controller
      */
     public function create()
     {
+        $title = "Admin";
+        $subtitle = "Add Post";
         $categories = Category::all()->pluck('name', 'id');
-        return view('admin.posts.create', compact('categories'));
+        $tags = Tag::all()->pluck('name', 'id');
+        return view('admin.posts.create', compact('categories', 'tags', 'title', 'subtitle'));
     }
 
     /**
@@ -57,6 +57,7 @@ class PostController extends Controller
     public function store(Request $request)
     {
         $post = Post::create(['title'=>$request->title, 'content'=>$request->content, 'category_id'=>$request->category_id, 'user_id'=>1]);
+        $post->tags()->sync($request->input('tags', []));
         return redirect()->route('admin.posts.index');
     }
 
@@ -79,8 +80,17 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
+        $title = "Admin";
+        $subtitle = "Add Post";
         $categories = Category::all()->pluck('name', 'id');
-        return view('admin.posts.edit')->withCategories($categories)->withPost($post);
+        $post->load('tags');
+        $tags = Tag::all()->pluck('name', 'id');
+        return view('admin.posts.edit')
+            ->withTitle($title)
+            ->withSubtitle($subtitle)
+            ->withCategories($categories)
+            ->withTags($tags)
+            ->withPost($post);
     }
 
     /**
@@ -96,9 +106,10 @@ class PostController extends Controller
             'title'=>$request->title,
             'content'=>$request->content,
             'category_id'=>$request->category_id,
-            'published'=>($request->published =='on')?1:0,
-            ]);
-        
+            'status'=>($request->status =='on')?1:0,
+        ]);
+         
+        $post->tags()->sync($request->input('tags', []));
         return redirect()->route('admin.posts.index');
     }
 
@@ -109,10 +120,8 @@ class PostController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy(Post $post) {
+        $post->tags()->detach();
         $post->delete();
-        // Post::destroy(1);
-        // Post::destroy([1, 2, 3]);
-        // Post::where('status', 0)->delete();
         return redirect()->route('admin.posts.index');
     }
 
