@@ -9,7 +9,8 @@ Route::get('/about', 'App\Http\Controllers\AboutController@index');
 
 Route::group(['prefix' => 'blog', 'as' => 'blog.', 'namespace' => 'App\Http\Controllers'], function () {
     Route::get('', 'BlogController@index')->name('index');
-    Route::get('show/{id}', 'BlogController@show')->name('show');
+    // Route::get('/{id}', 'BlogController@show')->name('show');
+    Route::get('/{slug}', 'BlogController@show')->name('show');
     Route::get('user/{id}', 'BlogController@postsByUser')->name('user');
     Route::get('category/{id}', 'BlogController@postsByCategory')->name('category');
     Route::get('like/{id}', 'BlogController@like')->name('like');
@@ -27,6 +28,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'App\Http\Co
     Route::resource('categories', 'CategoryController');
     Route::resource('posts', 'PostController');
     Route::resource('tags', 'TagController');
+    Route::post('pictures/upload', 'PictureController@upload');
+    Route::get('pictures/cropp', 'PictureController@cropp');
+    Route::resource('pictures', 'PictureController');
+    
 });
 
 

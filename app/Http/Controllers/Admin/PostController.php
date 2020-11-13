@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\{Post, Category, Tag};
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use Image;
 
 class PostController extends Controller
 {
@@ -17,18 +20,18 @@ class PostController extends Controller
     {
         $title = "Admin";
         $subtitle = "Posts";
-        $posts = Post::paginate(10);
+        // $posts = Post::paginate(10);
 
-        // $posts = Post::where([
-        //     ['title', '!=', Null],
-        //     [function ($query) use ($request) {
-        //         if (($term = $request->term)) {
-        //             $query->orWhere('title', 'LIKE', '%' . $term . '%')->get();
-        //         }
-        //     }]
-        // ])
-        //     ->orderBy("id", "desc")
-        //     ->paginate(10);
+        $posts = Post::where([
+            ['title', '!=', Null],
+            [function ($query) use ($request) {
+                if (($term = $request->term)) {
+                    $query->orWhere('title', 'LIKE', '%' . $term . '%')->get();
+                }
+            }]
+        ])
+        ->orderBy("id", "desc")
+        ->paginate(10);
         
         return view('admin.posts.index', compact('posts', 'title', 'subtitle'));
     }
@@ -56,9 +59,33 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        $post = Post::create(['title'=>$request->title, 'content'=>$request->content, 'category_id'=>$request->category_id, 'user_id'=>1]);
+        $post = Post::create([
+            'title'=>$request->title, 
+            'content'=>$request->content, 
+            'category_id'=>$request->category_id, 
+            'user_id'=>1,
+            'cover' => $this->uploadImage($request->file("cover")),
+        ]);
         $post->tags()->sync($request->input('tags', []));
         return redirect()->route('admin.posts.index');
+    }
+
+    public function uploadImage(UploadedFile $file) : string
+    {
+        $img = Image::make($file);
+        $filename = time() . "." .$file->getClientOriginalName();
+        // $file->getClientOriginalExtension();
+        $originalPath = 'app/public/covers/blog';
+
+        $img->resize(520, 250, function ($constraint) {
+            $constraint->aspectRatio();
+        })->save(storage_path($originalPath)."/".$filename);
+        
+        $img->resize(250,125, function ($constraint) {
+            $constraint->aspectRatio();
+        })->save(storage_path($originalPath)."/thumbnail/".$filename);
+
+        return $filename;
     }
 
     /**
@@ -81,7 +108,7 @@ class PostController extends Controller
     public function edit(Post $post)
     {
         $title = "Admin";
-        $subtitle = "Add Post";
+        $subtitle = "Edit Post";
         $categories = Category::all()->pluck('name', 'id');
         $post->load('tags');
         $tags = Tag::all()->pluck('name', 'id');
@@ -102,13 +129,22 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        $post->update([
+        $data = [
             'title'=>$request->title,
             'content'=>$request->content,
             'category_id'=>$request->category_id,
-            'status'=>($request->status =='on')?1:0,
-        ]);
-         
+            // 'published_at'=>($request->published_at =='on')?1:0,
+        ];
+
+        if($request->file("cover")) {
+            Storage::delete("public/covers/blog/" . $post->cover);
+            Storage::delete("public/covers/blog/thumbnail/" . $post->cover);
+            $data += ["cover" => $this->uploadImage($request->file("cover"))]; 
+        } else {
+            $data += ["cover" => $post->cover]; 
+        }
+
+        $post->update($data);
         $post->tags()->sync($request->input('tags', []));
         return redirect()->route('admin.posts.index');
     }
@@ -121,6 +157,8 @@ class PostController extends Controller
      */
     public function destroy(Post $post) {
         $post->tags()->detach();
+        Storage::delete("public/covers/blog/{$post->cover}");
+        Storage::delete("public/covers/blog/thumbnail/{$post->cover}");
         $post->delete();
         return redirect()->route('admin.posts.index');
     }

@@ -27,10 +27,14 @@
                 <span class="help-block">{{ __('Content Field Required') }}</span>
             </div>
             <div class="form-group">
-                <label for="status">{{ __('Is Published?') }}</label>
-                <input class="form-control" type="checkbox" name="status" id="status" {{ ($post->status == 1)?'checked':'' }}>
-                <span class="help-block">{{ __('Status Post') }}</span>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="status" name="status" {{ ($post->status == 1)?'checked':'' }}>
+                    <label class="form-check-label" for="status">
+                        {{ __('Check If Published') }}
+                    </label>
+                </div>
             </div>
+            
             <div class="form-group">
                 <label class="required" for="category">{{ __('Category') }}</label>
                 <select class="form-control select2" name="category_id" id="category" required>
@@ -51,6 +55,20 @@
                     @endforeach
                 </select>
             </div>
+            <div class="mx-auto uploader">
+                <input id="file-upload" type="file" name="cover" accept="image/*" onchange="readURL(this);">
+                <label for="file-upload" id="file-drag">
+                    <img id="file-image" src="{{ asset("storage/covers/blog/thumbnail/". $post->cover) }}" alt="Preview" class="">
+                    <div id="start">
+                        <i class="fas fa-download" aria-hidden="true"></i>
+                        <div>Change This Image</div>
+                        <div id="notimage" class="hidden">Please select an image</div>
+                        <span id="file-upload-btn" class="btn btn-primary">Select a file</span>
+                        <br>
+                        <span class="text-danger">{{ $errors->first('cover') }}</span>
+                    </div>
+                </label>
+              </div>
             <div class="form-group">
                 <button class="btn btn-danger" type="submit">
                     {{ __('Update') }}
@@ -69,5 +87,22 @@
     $(document).ready(function () {
         $('.select2').select2();
     });
+
+    function readURL(input, id) {
+        id = id || '#file-image';
+        
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+    
+            reader.onload = function (e) {
+                $(id).attr('src', e.target.result);
+            };
+    
+            reader.readAsDataURL(input.files[0]);
+            $('#file-image').removeClass('hidden');
+            $('#start').hide();
+        }
+    }
+
 </script>
 @endsection

@@ -22,7 +22,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
         public function definition()
         {
             return [
-                'name' => $this->faker->sentence($nbWords = 6, $variableNbWords = true),
+                'name' => $this->faker->word,
                 'description' => $this->faker->text($maxNbChars = 200),
                 'votes' => $this->faker->randomDigitNotNull(),
                 'created_at' => now(),

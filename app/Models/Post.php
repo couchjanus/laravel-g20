@@ -5,14 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Cviebrock\EloquentSluggable\Sluggable;
 
 class Post extends Model
 {
     use HasFactory;
     use SoftDeletes;
+    use Sluggable;
 
     protected $fillable = [
-        'title', 'content', 'category_id', 'user_id', 'status', 'votes'
+        'title', 'content', 'category_id', 'user_id', 'status', 'votes', 'cover', 'published_at'
     ];
 
     /**
@@ -27,6 +29,15 @@ class Post extends Model
         'seen_at',
         'published_at'
     ];
+    
+    public function sluggable()    {
+        return [
+            'slug' => [
+                'source' => 'title'
+            ]
+        ];
+    }
+ 
     // По умолчанию используется поле deleted_at. Изменить название можно, определив свойство DELETED_AT.
     const DELETED_AT = 'deleted_at';
     // или
@@ -72,5 +83,12 @@ class Post extends Model
         return $this->belongsToMany('App\Models\Tag');
     }
 
+    public function getDescriptionAttribute()   {
+        return substr($this->content, 0, 70) . "...";
+    }
+ 
+    public function getShortTitleAttribute()   {
+        return substr($this->title, 0, 30);
+    }
     
 }

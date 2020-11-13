@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Post;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use \Cviebrock\EloquentSluggable\Services\SlugService;
 
 class PostFactory extends Factory
 {
@@ -23,14 +24,16 @@ class PostFactory extends Factory
     {
         $categories = \DB::table('categories')->pluck('id');
         $users = \DB::table('users')->pluck('id');
-
+        $title = $this->faker->sentence($nbWords = 6, $variableNbWords = true);
         return [
-            'title' => $this->faker->sentence($nbWords = 6, $variableNbWords = true),
+            'title' => $title,
+            'slug' => SlugService::createSlug(Post::class, 'slug', $title),
             'content' => $this->faker->paragraph($nbSentences = 3, $variableNbSentences = true),
             'votes' => $this->faker->randomDigitNotNull(),
             'status' => $this->faker->randomDigitNotNull(),
             'category_id' => $this->faker->randomElement($categories),
             'user_id' => $this->faker->randomElement($users),
+            "cover" => asset("storage/covers/cover.png"),
             'created_at' => now(),
             'updated_at' => now(),
         ];

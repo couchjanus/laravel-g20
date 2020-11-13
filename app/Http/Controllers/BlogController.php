@@ -9,9 +9,8 @@ class BlogController extends Controller
 {
     public function index()
     {
-        $posts = Post::where('status', 2)->with('category')->with('user')->get();
-        // dump($posts);
-        return view('blog.index', compact('posts'));
+        $posts = Post::with('category')->with('user')->get();
+       return view('blog.index', compact('posts'));
     }
 
     
@@ -31,17 +30,19 @@ class BlogController extends Controller
         
         return view('blog.index', compact('posts'));
     }
- 
 
-    public function show($id) {
-        $post = Post::where('id', $id)
-            ->with('user')
-            ->with('category')
-            ->first();
-        // dd($post);
-        return view('blog.show', compact('post'));
+    public function show($slug) {
+        if (is_numeric($slug)) {
+            $post = Post::findOrFail($slug);
+            return redirect(route('blog.show', $post->slug), 301);
+        }
+
+        $post = Post::whereSlug($slug)->with('user')->with('category')->firstOrFail();
+
+        return view('blog.show',compact('post'));
     }
     
+
     public function like($id) {
         $post = Post::where('id', $id)
             ->increment('votes');
