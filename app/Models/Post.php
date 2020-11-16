@@ -83,10 +83,21 @@ class Post extends Model
         return $this->belongsToMany('App\Models\Tag');
     }
 
-    public function getDescriptionAttribute()   {
-        return substr($this->content, 0, 70) . "...";
+    public function getReadTimeAttribute(): string
+    {
+        // Only count words in our estimation
+        $words = str_word_count(strip_tags($this->content));
+
+        // Divide by the average number of words per minute
+        $minutes = ceil($words / 250);
+
+        return sprintf('%d %s %s', $minutes, 'min', 'read');
     }
- 
+
+    public function getDescriptionAttribute(): string   {
+        return substr($this->content, 0, 250) . "...";
+    }
+    
     public function getShortTitleAttribute()   {
         return substr($this->title, 0, 30);
     }

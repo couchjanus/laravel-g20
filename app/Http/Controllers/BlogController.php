@@ -9,14 +9,14 @@ class BlogController extends Controller
 {
     public function index()
     {
-        $posts = Post::with('category')->with('user')->get();
-       return view('blog.index', compact('posts'));
+        $posts = Post::with('category')->with('user')->simplePaginate(7);
+        return view('blog.index', compact('posts'));
     }
 
     
     public function postsByUser($id)
     {
-        $posts = Post::where([['status', 2], ['user_id', $id]])->with('category')->with('user')->get();
+        $posts = Post::where([['status', 2], ['user_id', $id]])->with('category')->with('user')->simplePaginate(7);
         return view('blog.index', compact('posts'));
     }
 
@@ -26,7 +26,7 @@ class BlogController extends Controller
             ->with('user')
             ->with('category')
             ->orderBy('created_at', 'desc')
-            ->simplePaginate();
+            ->simplePaginate(7);
         
         return view('blog.index', compact('posts'));
     }

@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/about', 'App\Http\Controllers\AboutController@index');
+Route::get('/about', 'App\Http\Controllers\AboutController@index')->name('about');
 
 Route::group(['prefix' => 'blog', 'as' => 'blog.', 'namespace' => 'App\Http\Controllers'], function () {
     Route::get('', 'BlogController@index')->name('index');
