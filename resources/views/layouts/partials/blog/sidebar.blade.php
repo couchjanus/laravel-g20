@@ -1,5 +1,5 @@
 <!-- Sidebar Section -->
-<aside class="w-full md:w-1/3 ml-1">
+<aside class="ml-1 w-1/4 bg-gray-400 h-12">
     <div class="w-full bg-white my-8 shadow-md">
         <div class="w-full bg-white p-4 text-lg text-gray-600">Categories</div>
         @foreach($categories as $category)

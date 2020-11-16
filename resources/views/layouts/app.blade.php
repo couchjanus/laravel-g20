@@ -11,6 +11,10 @@
     <title>@yield('title')</title>
     <!-- Style sheets -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
+    <style>
+    
+    </style>
 </head>
 
 <body class="bg-light-gray flex flex-col h-screen lato">

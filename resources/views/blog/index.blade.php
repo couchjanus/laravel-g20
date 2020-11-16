@@ -5,7 +5,7 @@
 
 @section('content')
     <!-- Latest Posts Section -->
-    <section class="w-full md:w-2/3 mr-1">
+    <section class="w-3/4 bg-gray-500 mr-1">
                 @foreach($posts as $post)
                     <article class="w-full py-2 bg-white py-4 px-8 my-8 shadow-md border-blue-400 border-l-8">
                         <!-- Title & Excerpt -->
@@ -34,7 +34,10 @@
                         </div>
                     </article>
                 @endforeach
-               {{ $posts->links() }}
+                <div class="px-6 py-3">
+                    {{ $posts->links() }}
+                </div>
+                
     </section>
 
 @endsection

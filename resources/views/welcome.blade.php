@@ -125,13 +125,7 @@
                     <div class="ml-4 text-center text-sm text-gray-500 sm:text-right sm:ml-0">
                         Build v{{ Illuminate\Foundation\Application::VERSION }}
 
-                        <?php
                         
-                        $time_end = microtime(true);
-                        $time = $time_end - LARAVEL_START;
-                        echo "Выполнено за $time секунд";
-
-                        ?>
                     </div>
                 </div>
             </div>

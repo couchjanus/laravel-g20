@@ -1,4 +1,4 @@
-<footer class="w-full bg-white px-4 md:px-0">
+<footer class="flex items-center justify-between flex-wrap bg-white p-6 mt-2 mb-10">
     <div class="container mx-auto py-6 flex flex-col md:flex-row items-center justify-between">
         <span class="text-center md:text-left text-gray-600">© {{ now()->year }} {{ config('app.name', __('canvas::blog.title')) }}. {{ config('blog.taglines.header') }}</span>
         <div class="flex mt-6 mb-4 md:my-0">

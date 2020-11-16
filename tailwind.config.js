@@ -8,5 +8,11 @@ module.exports = {
     extend: {},
   },
   variants: {},
-  plugins: [],
+  plugins: [
+    require('tailwindcss-plugins/pagination')({
+        /* Customizations here... */
+        color: colors['pink-dark'],
+        wrapper: 'inline-flex list-reset shadow rounded'
+    }),
+  ],
 }
