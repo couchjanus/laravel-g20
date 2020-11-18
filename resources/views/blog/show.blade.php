@@ -1,5 +1,8 @@
 @extends('layouts.blog')
 
+
+
+
 @section('content')
     <div class="w-full mt-8">
         <main class="container mx-auto bg-white rounded shadow md:pt-4 pb-12 px-6 md:px-10">
@@ -9,7 +12,7 @@
             <h1 class="text-4xl font-bold mt-8 mb-2">{{ $post->title }}</h1>
 
             @isset($post->cover)
-                <img src='{{ asset("storage/covers/blog/".$post->cover) }}' class="rounded-lg pt-12" title="{{ $post->title }}">
+                <img src="'/storage/covers/blog/'.{{ $post->cover }}" class="rounded-lg pt-12" title="{{ $post->title }}">
             @endisset
 
             <div class="flex items-center justify-between pt-4 pb-6 text-gray-700 border-b">

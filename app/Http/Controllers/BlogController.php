@@ -9,10 +9,11 @@ class BlogController extends Controller
 {
     public function index()
     {
-        $posts = Post::with('category')->with('user')->simplePaginate(7);
-        return view('blog.index', compact('posts'));
+        // $posts = Post::with('category')->with('user')->simplePaginate(6);
+        // return view('blog.index', compact('posts'));
+        return view('blog.index');
     }
-
+    
     
     public function postsByUser($id)
     {

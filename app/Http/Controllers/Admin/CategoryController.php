@@ -22,7 +22,7 @@ class CategoryController extends Controller
         $categories = Category::paginate();
         return view('admin.categories.index', compact('categories', 'title', 'subtitle'));
     }
-
+    
     /**
      * Show the form for creating a new resource.
      *
@@ -43,12 +43,8 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        DB::table('categories')->insert([
-            'name' => $request['name'], 
-            'description' => $request['description'], 
-            'created_at' => Carbon::now('Europe/Kiev')
-            ]);
-        return redirect(route('admin.categories.index'));
+        Category::create(['name'=>$request->name, 'description' => $request->description,]);
+        return redirect(route('admin.categories.index'))->withMessage('Category created successfully')->withType('success');
     }
 
     /**

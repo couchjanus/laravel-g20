@@ -9,7 +9,6 @@ Route::get('/about', 'App\Http\Controllers\AboutController@index')->name('about'
 
 Route::group(['prefix' => 'blog', 'as' => 'blog.', 'namespace' => 'App\Http\Controllers'], function () {
     Route::get('', 'BlogController@index')->name('index');
-    // Route::get('/{id}', 'BlogController@show')->name('show');
     Route::get('/{slug}', 'BlogController@show')->name('show');
     Route::get('user/{id}', 'BlogController@postsByUser')->name('user');
     Route::get('category/{id}', 'BlogController@postsByCategory')->name('category');
@@ -34,34 +33,26 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'App\Http\Co
     
 });
 
+// Route::get('profiles', 'App\Http\Controllers\ProfileController@index')->name('profile.index');
+// Route::get('profiles/{id}', 'App\Http\Controllers\ProfileController@show')->name('profile.show');
 
-Route::get('profiles', 'App\Http\Controllers\ProfileController@index')->name('profile.index');
-Route::get('profiles/{id}', 'App\Http\Controllers\ProfileController@show')->name('profile.show');
-
-
-Route::get('posts-by-status', function () {
-    $user = \App\Models\User::find(7);
-    // dump($user);
-    // $posts = $user->posts;
-    // dump($posts);
-    $posts = $user->posts->where('status', 1)->all();
-    foreach ($posts as $post) {
-        dump($post);
+Route::get('test', function (\Illuminate\Http\Request $request) {
+    // $item = $request->session()->get('key');
+    // dump($item);
+    // $item = $request->session()->get('key', 'default value');
+    // dump($item);
+    session(['my-key' => 'it is in session now']);
+    $item = $request->session()->get('my-key');
+    dump($item);
+    $items = $request->session()->all();
+    foreach ($items as $item) {
+        dump($item);
     }
 });
 
-Route::get('posts-by-user', function () {
-    $posts = App\Models\Post::where('status', 1)
-    ->with('user')
-    ->get();
-    dump($posts);
-});
- 
- 
-// Route::get('category/{id}', 'BlogController@getByCategory');
-//     Route::get('author/{id}', 'BlogController@getByAuthor');
-//     Route::get('show/{id}', 'BlogController@show');
- 
+Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+    return view('dashboard');
+})->name('dashboard');
 
 // Еще какие-то маршруты....
 Route::fallback(function() {
