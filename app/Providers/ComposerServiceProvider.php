@@ -25,7 +25,7 @@ class ComposerServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        View::composer('layouts.partials.blog.sidebar', function($view) {
+        View::composer('components.blog.sidebar', function($view) {
             $view->with(['categories' => Category::get()]);
         });
     }

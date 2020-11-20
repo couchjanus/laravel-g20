@@ -4,8 +4,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('home.index');
 Route::get('/about', 'App\Http\Controllers\AboutController@index')->name('about');
+Route::get('/contact', 'App\Http\Controllers\ContactController@index')->name('contact');
 
 Route::group(['prefix' => 'blog', 'as' => 'blog.', 'namespace' => 'App\Http\Controllers'], function () {
     Route::get('', 'BlogController@index')->name('index');
@@ -16,7 +17,7 @@ Route::group(['prefix' => 'blog', 'as' => 'blog.', 'namespace' => 'App\Http\Cont
     
 });
 
-Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'App\Http\Controllers\Admin'], function () {
+Route::group(['middleware'=>['auth'], 'prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'App\Http\Controllers\Admin'], function () {
 	Route::get('posts/trashed', 'PostController@trashed')->name('posts.trashed');
     Route::post('posts/restore/{id}', 'PostController@restore')->name('posts.restore');
     Route::delete('posts/force/{id}', 'PostController@force')->name('posts.force');
@@ -32,9 +33,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'App\Http\Co
     Route::resource('pictures', 'PictureController');
     
 });
-
-// Route::get('profiles', 'App\Http\Controllers\ProfileController@index')->name('profile.index');
-// Route::get('profiles/{id}', 'App\Http\Controllers\ProfileController@show')->name('profile.show');
 
 Route::get('test', function (\Illuminate\Http\Request $request) {
     // $item = $request->session()->get('key');

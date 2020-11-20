@@ -11,6 +11,11 @@ use Image;
 
 class PostController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->user =  \Auth::user();
+    }
     /**
      * Display a listing of the resource.
      *
@@ -20,7 +25,6 @@ class PostController extends Controller
     {
         $title = "Admin";
         $subtitle = "Posts";
-        // $posts = Post::paginate(10);
 
         $posts = Post::where([
             ['title', '!=', Null],
@@ -59,16 +63,27 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
+        $validatedData = $request->validate([
+            // 'title' => 'bail|unique:posts|max:255|required',
+            'title' => 'unique:posts|max:255|required',
+            'content' => 'required',
+            'category_id' => 'required',
+            'cover' => 'required',
+        ]);
+    
+        // The blog post is valid...
+
         $post = Post::create([
             'title'=>$request->title, 
             'content'=>$request->content, 
             'category_id'=>$request->category_id, 
-            'user_id'=>1,
+            'user_id' => auth()->id(),
             'cover' => $this->uploadImage($request->file("cover")),
         ]);
         $post->tags()->sync($request->input('tags', []));
         return redirect()->route('admin.posts.index');
     }
+
 
     public function uploadImage(UploadedFile $file) : string
     {

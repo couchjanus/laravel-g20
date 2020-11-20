@@ -10,7 +10,7 @@ class IndexPosts extends Component
 
     public function getPostsProperty()
     {
-        return Post::with('category')->with('user')->simplePaginate(6);
+        return Post::orderBy('created_at', 'desc')->with('category')->with('user')->simplePaginate(6);
     }
 
     public function render()

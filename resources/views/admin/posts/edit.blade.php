@@ -12,12 +12,10 @@
             @csrf
             <div class="form-group">
                 <label class="required" for="title">{{ __('Post Title') }}</label>
-                <input class="form-control {{ $errors->has('title') ? 'is-invalid' : '' }}" type="text" name="title" id="title" value="{{ old('title', $post->title) }}" required>
-                @if($errors->has('title'))
-                    <div class="invalid-feedback">
-                        {{ $errors->first('title') }}
-                    </div>
-                @endif
+                <input class="form-control class="@error('title') is-invalid @enderror" type="text" name="title" id="title" value="{{ old('title', $post->title) }}" required>
+                @error('title')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
                 <span class="help-block">{{ __('Title Field Required') }}</span>
             </div>
             <div class="form-group">

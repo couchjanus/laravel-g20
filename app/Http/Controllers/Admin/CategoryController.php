@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use DB;
 use Carbon\Carbon;
 use App\Models\Category;
+use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller
 {
@@ -43,6 +44,22 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
+        // $validator = Validator::make($request->all(), [
+        //     'name' => 'required|unique:categories|max:191|min:3',
+        //     'description' => 'nullable|string',
+        // ])->validate();
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|unique:categories|max:191|min:3',
+            'description' => 'nullable|string',
+        ]);
+
+
+        if ($validator->fails()) {
+            return redirect('admin/categories/create')->withErrors($validator)->withInput();
+        }
+ 
+ 
         Category::create(['name'=>$request->name, 'description' => $request->description,]);
         return redirect(route('admin.categories.index'))->withMessage('Category created successfully')->withType('success');
     }

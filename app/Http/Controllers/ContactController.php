@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 
 class ContactController extends Controller
 {
-    public function update(Request $request)     {
-        // $request->user() returns an instance of the authenticated user...
+    public function index()
+    {
+        return view('contact.index');
     }
-
 }

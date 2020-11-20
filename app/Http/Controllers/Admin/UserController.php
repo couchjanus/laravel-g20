@@ -6,7 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use DB;
 use Carbon\Carbon;
-use App\Models\User;
+use App\Models\{User, Profile};
+use App\Http\Requests\{StoreUserRequest, UpdateUserRequest};
 
 class UserController extends Controller
 {
@@ -55,9 +56,12 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
-        //
+        $user = User::create($request->all());
+        $profile = new Profile();
+        $user->profile()->save($profile);
+        return redirect()->route('admin.users.index')->withSuccess('User created successfully');
     }
 
     /**
