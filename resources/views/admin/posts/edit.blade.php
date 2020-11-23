@@ -10,6 +10,7 @@
         <form method="POST" action="{{ route("admin.posts.update", [$post->id]) }}" enctype="multipart/form-data">
             @method('PUT')
             @csrf
+            
             <div class="form-group">
                 <label class="required" for="title">{{ __('Post Title') }}</label>
                 <input class="form-control class="@error('title') is-invalid @enderror" type="text" name="title" id="title" value="{{ old('title', $post->title) }}" required>
