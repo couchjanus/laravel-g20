@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Request;
 
 Route::get('/', function () {
     return view('welcome');
@@ -34,19 +36,32 @@ Route::group(['middleware'=>['auth'], 'prefix' => 'admin', 'as' => 'admin.', 'na
     
 });
 
-Route::get('test', function (\Illuminate\Http\Request $request) {
-    // $item = $request->session()->get('key');
-    // dump($item);
-    // $item = $request->session()->get('key', 'default value');
-    // dump($item);
-    session(['my-key' => 'it is in session now']);
-    $item = $request->session()->get('my-key');
-    dump($item);
-    $items = $request->session()->all();
-    foreach ($items as $item) {
-        dump($item);
-    }
+Route::get('test', function () {
+    Log::info('A user has arrived at the welcome page.');
+    return '<h1>Welcome back User</h1>';
 });
+
+Route::get('reminder', function () {
+    return new \App\Mail\Reminder();
+})->name('reminder');
+
+Route::get('reminderhu', function () {
+    return new \App\Mail\Reminder('Blahuoooo!');
+})->name('reminderhu');
+
+Route::get('/email/verify', function () {
+    return view('auth.verify-email');
+})->middleware(['auth'])->name('verification.notice');
+
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+    return redirect('/home');
+})->middleware(['auth', 'signed'])->name('verification.verify');
+
+Route::post('/email/verification-notification', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+    return back()->with('status', 'verification-link-sent');
+})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
@@ -56,3 +71,4 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 Route::fallback(function() {
     return "Oops… How you've trapped here?";
 });
+
