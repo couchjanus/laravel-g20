@@ -30,6 +30,9 @@ Route::group(['middleware'=>['auth'], 'prefix' => 'admin', 'as' => 'admin.', 'na
     Route::resource('categories', 'CategoryController');
     Route::resource('posts', 'PostController');
     Route::resource('tags', 'TagController');
+    Route::resource('permissions', 'PermissionController');
+    Route::resource('roles', 'RoleController');
+
     Route::post('pictures/upload', 'PictureController@upload');
     Route::get('pictures/cropp', 'PictureController@cropp');
     Route::resource('pictures', 'PictureController');

@@ -46,6 +46,21 @@
                     user password
                 </p>
             </div>
+
+            <div class="form-group {{ $errors->has('roles') ? 'has-error' : '' }}">
+                <label for="roles">Roles*</label>
+                <select name="roles[]" id="roles" class="form-control select2" multiple="multiple" required>
+                    @foreach($roles as $id => $roles)
+                        <option value="{{ $id }}" {{ (in_array($id, old('roles', [])) || isset($user) && $user->roles->contains($id)) ? 'selected' : '' }}>{{ $roles }}</option>
+                    @endforeach
+                </select>
+                @if($errors->has('roles'))
+                    <em class="invalid-feedback">
+                        {{ $errors->first('roles') }}
+                    </em>
+                @endif
+                
+            </div>
             
             <div>
                 <input class="btn btn-danger" type="submit" value="Update">

@@ -16,4 +16,5 @@ $(document).ready(function () {
       $(this).addClass('active')
     }
   })
+  $('.select2').select2();
 })
