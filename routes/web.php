@@ -39,32 +39,12 @@ Route::group(['middleware'=>['auth'], 'prefix' => 'admin', 'as' => 'admin.', 'na
     
 });
 
-Route::get('test', function () {
-    Log::info('A user has arrived at the welcome page.');
-    return '<h1>Welcome back User</h1>';
+Route::get('test', function(){
+    $details['email'] = 'your_email@gmail.com';
+    
+    dispatch(new App\Jobs\SendEmailJob($details));
+    dd('done');
 });
-
-Route::get('reminder', function () {
-    return new \App\Mail\Reminder();
-})->name('reminder');
-
-Route::get('reminderhu', function () {
-    return new \App\Mail\Reminder('Blahuoooo!');
-})->name('reminderhu');
-
-Route::get('/email/verify', function () {
-    return view('auth.verify-email');
-})->middleware(['auth'])->name('verification.notice');
-
-Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
-    $request->fulfill();
-    return redirect('/home');
-})->middleware(['auth', 'signed'])->name('verification.verify');
-
-Route::post('/email/verification-notification', function (Request $request) {
-    $request->user()->sendEmailVerificationNotification();
-    return back()->with('status', 'verification-link-sent');
-})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
